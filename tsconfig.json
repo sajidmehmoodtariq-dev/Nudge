@@ -1,0 +1,26 @@
+{
+  "extends": "@react-native/typescript-config/tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@src": ["src/index"],
+      "@src/*": ["src/*"],
+      "@bubble": ["src/bubble/index"],
+      "@bubble/*": ["src/bubble/*"],
+      "@parser": ["src/parser/index"],
+      "@parser/*": ["src/parser/*"],
+      "@reminders": ["src/reminders/index"],
+      "@reminders/*": ["src/reminders/*"],
+      "@notifications": ["src/notifications/index"],
+      "@notifications/*": ["src/notifications/*"],
+      "@screens": ["src/screens/index"],
+      "@screens/*": ["src/screens/*"],
+      "@components": ["src/components/index"],
+      "@components/*": ["src/components/*"],
+      "@theme": ["src/theme/index"],
+      "@theme/*": ["src/theme/*"],
+      "@store": ["src/store/index"],
+      "@store/*": ["src/store/*"]
+    }
+  }
+}

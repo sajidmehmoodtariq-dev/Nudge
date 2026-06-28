@@ -1,0 +1,38 @@
+export const URDU_SCRIPT_MAP: Record<string, string> = {
+  // Time references
+  کل: 'tomorrow',
+  پرسوں: 'day after tomorrow',
+  آج: 'today',
+  ابھی: 'now',
+  اگلے: 'next',
+  اس: 'this',
+  // Periods
+  صبح: 'morning',
+  دوپہر: 'afternoon',
+  شام: 'evening',
+  رات: 'night',
+  // Days
+  سوموار: 'Monday',
+  منگل: 'Tuesday',
+  بدھ: 'Wednesday',
+  جمعرات: 'Thursday',
+  جمعہ: 'Friday',
+  ہفتہ: 'Saturday',
+  اتوار: 'Sunday',
+  // Number words
+  ایک: '1',
+  دو: '2',
+  تین: '3',
+  چار: '4',
+  پانچ: '5',
+  چھے: '6',
+  سات: '7',
+  آٹھ: '8',
+  نو: '9',
+  دس: '10',
+  // Clock
+  بجے: "o'clock",
+  منٹ: 'minutes',
+  گھنٹے: 'hours',
+  میں: 'in',
+};
