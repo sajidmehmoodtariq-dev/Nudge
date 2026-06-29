@@ -1,19 +1,38 @@
-// Stub — full implementation in Phase 1 Step 8
-// Depends on: BubbleModule.kt native module
-
+import {useState, useCallback} from 'react';
 import {NativeModules} from 'react-native';
 
 const {Bubble} = NativeModules;
 
-/**
- * JS wrapper around the native BubbleModule (Kotlin).
- * Requires SYSTEM_ALERT_WINDOW permission before calling show().
- */
 export const BubbleService = {
+  hasOverlayPermission(): Promise<boolean> {
+    return Bubble?.hasOverlayPermission() ?? Promise.resolve(false);
+  },
+  requestOverlayPermission(): void {
+    Bubble?.requestOverlayPermission();
+  },
   show(): void {
-    Bubble?.show();
+    Bubble?.showBubble();
   },
   hide(): void {
-    Bubble?.hide();
+    Bubble?.hideBubble();
+  },
+  updateState(showBadge: boolean): void {
+    Bubble?.updateBubbleState(showBadge);
   },
 };
+
+export function useBubble() {
+  const [isVisible, setIsVisible] = useState(false);
+
+  const show = useCallback(() => {
+    BubbleService.show();
+    setIsVisible(true);
+  }, []);
+
+  const hide = useCallback(() => {
+    BubbleService.hide();
+    setIsVisible(false);
+  }, []);
+
+  return {show, hide, isVisible};
+}
