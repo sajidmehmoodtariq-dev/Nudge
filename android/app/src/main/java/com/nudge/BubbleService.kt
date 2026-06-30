@@ -38,13 +38,7 @@ class BubbleService : Service() {
     private lateinit var layoutParams: WindowManager.LayoutParams
     private lateinit var prefs: SharedPreferences
 
-    private var isDraggable = false
     private val handler = Handler(Looper.getMainLooper())
-    private val longPressRunnable = Runnable {
-        isDraggable = true
-        // Vibrate slightly to indicate draggability
-        bubbleIcon.animate().scaleX(1.1f).scaleY(1.1f).setDuration(150).start()
-    }
 
     override fun onBind(intent: Intent?): IBinder? = null
 
@@ -159,9 +153,6 @@ class BubbleService : Service() {
                         initialTouchX = event.rawX
                         initialTouchY = event.rawY
                         isMoved = false
-                        isDraggable = false
-                        
-                        handler.postDelayed(longPressRunnable, 500)
                         return true
                     }
                     MotionEvent.ACTION_MOVE -> {
@@ -170,12 +161,9 @@ class BubbleService : Service() {
                         
                         if (deltaX > touchSlop || deltaY > touchSlop) {
                             isMoved = true
-                            if (!isDraggable) {
-                                handler.removeCallbacks(longPressRunnable)
-                            }
                         }
 
-                        if (isDraggable) {
+                        if (isMoved) {
                             layoutParams.x = initialX + (event.rawX - initialTouchX).toInt()
                             layoutParams.y = initialY + (event.rawY - initialTouchY).toInt()
                             windowManager.updateViewLayout(bubbleRoot, layoutParams)
@@ -183,14 +171,10 @@ class BubbleService : Service() {
                         return true
                     }
                     MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                        handler.removeCallbacks(longPressRunnable)
-                        
-                        if (isDraggable) {
+                        if (isMoved) {
                             // Run spring bounce animation to nearest edge or clamp
                             animateToClampedPosition(layoutParams.x, layoutParams.y)
-                            bubbleIcon.animate().scaleX(1.0f).scaleY(1.0f).setDuration(150).start()
-                            isDraggable = false
-                        } else if (!isMoved && event.action == MotionEvent.ACTION_UP) {
+                        } else if (event.action == MotionEvent.ACTION_UP) {
                             // It was a tap!
                             emitTapEvent()
                         }
@@ -227,15 +211,18 @@ class BubbleService : Service() {
     }
 
     private fun emitTapEvent() {
+        // ALWAYS bring the app to the foreground first
+        val launchIntent = packageManager.getLaunchIntentForPackage(packageName)
+        if (launchIntent != null) {
+            launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            startActivity(launchIntent)
+        }
+
+        // Then emit the event so React Native renders the Bottom Sheet
         val reactContext = BubbleModule.companionReactContext
         if (reactContext != null && reactContext.hasActiveReactInstance()) {
             reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
                 .emit("onBubbleTap", null)
-        } else {
-            // Fallback: Launch MainActivity
-            val launchIntent = packageManager.getLaunchIntentForPackage(packageName)
-            launchIntent?.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-            startActivity(launchIntent)
         }
     }
 

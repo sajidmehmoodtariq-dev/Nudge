@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const Jimp = require('jimp');
 
 async function crop() {

@@ -64,4 +64,10 @@ class BubbleModule(reactContext: ReactApplicationContext) : ReactContextBaseJava
     fun updateBubbleState(showBadge: Boolean) {
         BubbleService.instance?.updateBadge(showBadge)
     }
+
+    @ReactMethod
+    fun moveToBackground() {
+        val activity = currentActivity
+        activity?.moveTaskToBack(true)
+    }
 }

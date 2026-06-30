@@ -19,6 +19,9 @@ export const BubbleService = {
   updateState(showBadge: boolean): void {
     Bubble?.updateBubbleState(showBadge);
   },
+  moveToBackground(): void {
+    Bubble?.moveToBackground();
+  },
 };
 
 export function useBubble() {
