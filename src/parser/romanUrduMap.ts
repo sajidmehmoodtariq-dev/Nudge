@@ -2,6 +2,7 @@ export const ROMAN_URDU_MAP: Record<string, string> = {
   // Time references
   aaj: 'today',
   kal: 'tomorrow',
+  cal: 'tomorrow', // voice dictation phonetic spelling
   parso: 'in 2 days',
   abhi: 'now',
   agli: 'next',
@@ -11,8 +12,11 @@ export const ROMAN_URDU_MAP: Record<string, string> = {
   is: 'this',
   // Periods
   subah: 'morning',
+  subha: 'morning',
   dopeher: 'afternoon',
+  dopahar: 'afternoon',
   sham: 'evening',
+  shaam: 'evening',
   raat: 'night',
   // Days
   pir: 'Monday',

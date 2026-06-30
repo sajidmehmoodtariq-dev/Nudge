@@ -13,8 +13,13 @@ import {HomeScreen, ConfirmScreen, SettingsScreen, PermissionScreen} from '@scre
 import {colors} from '@theme';
 
 import {BubbleService} from './src/bubble/BubbleService';
+import {
+  checkPastDueReminders,
+  requestNotificationPermission,
+} from './src/notifications/notificationService';
 import {parseReminder} from './src/parser';
 import type {ParseResult} from './src/parser/types';
+import {initDB} from './src/reminders/db';
 
 const Stack = createNativeStackNavigator();
 
@@ -25,8 +30,12 @@ function App(): React.JSX.Element {
   const [parseResult, setParseResult] = useState<ParseResult | null>(null);
 
   useEffect(() => {
-    async function checkFirstLaunch() {
+    async function initApp() {
       try {
+        initDB();
+        await requestNotificationPermission();
+        await checkPastDueReminders();
+
         const hasPermission = await BubbleService.hasOverlayPermission();
         if (hasPermission) {
           setInitialRoute('Home');
@@ -35,10 +44,11 @@ function App(): React.JSX.Element {
           setInitialRoute('Permission');
         }
       } catch (error) {
+        console.error('App initialization error:', error);
         setInitialRoute('Permission');
       }
     }
-    checkFirstLaunch();
+    initApp();
 
     const listener = DeviceEventEmitter.addListener('onBubbleTap', () => {
       setLaunchedFromBubble(true);

@@ -15,12 +15,16 @@ export function detectLanguage(text: string): Language {
   // Roman Urdu: check for common Romanised Urdu tokens
   const romanUrduTokens = [
     'kal',
+    'cal',
     'aaj',
     'abhi',
     'subah',
+    'subha',
     'sham',
+    'shaam',
     'raat',
     'dopeher',
+    'dopahar',
     'somwar',
     'mangal',
     'budh',

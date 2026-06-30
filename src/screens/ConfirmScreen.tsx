@@ -3,9 +3,9 @@ import {CheckCircle, AlertTriangle} from 'lucide-react-native';
 import React, {useState, useCallback} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, NativeModules} from 'react-native';
 
+import {scheduleNotification} from '../notifications/notificationService';
 import type {ParseResult} from '../parser/types';
-import {insertReminder} from '../services/Database';
-import {scheduleReminderNotification} from '../services/Notifications';
+import * as reminderService from '../reminders/reminderService';
 
 // Define the route params type
 type ConfirmScreenProps = {
@@ -49,10 +49,19 @@ export default function ConfirmScreen({route, navigation}: ConfirmScreenProps) {
   const handleSave = useCallback(async () => {
     try {
       // 1. Save to SQLite
-      const reminderId = await insertReminder(result.label, datetime, result.language);
+      const reminderId = await reminderService.createReminder({
+        label: result.label,
+        datetime: datetime.getTime(),
+        language: result.language,
+        originalText: result.originalText,
+      });
 
       // 2. Schedule Notification
-      await scheduleReminderNotification(result.label, datetime, reminderId);
+      await scheduleNotification({
+        id: reminderId,
+        title: result.label,
+        datetime,
+      });
 
       // 3. Play Success Animation via Native Module
       if (Bubble && Bubble.playSuccessAnimation) {

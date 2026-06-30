@@ -1,14 +1,20 @@
-import * as SQLite from 'expo-sqlite';
+import SQLite from 'react-native-sqlite-storage';
 
-// Open or create the database. The connection is a singleton.
-const db = SQLite.openDatabaseSync('nudge.db');
+SQLite.enablePromise(true);
 
-/**
- * Initializes the database tables. Should be called on app launch.
- * It uses IF NOT EXISTS so it's idempotent.
- */
-export function initDB() {
-  db.execSync(`
+let db: SQLite.SQLiteDatabase | null = null;
+
+export async function getDB(): Promise<SQLite.SQLiteDatabase> {
+  if (db) {
+    return db;
+  }
+  db = await SQLite.openDatabase({name: 'nudge.db', location: 'default'});
+  return db;
+}
+
+export async function initDB() {
+  const database = await getDB();
+  await database.executeSql(`
     CREATE TABLE IF NOT EXISTS reminders (
       id TEXT PRIMARY KEY,
       label TEXT,
@@ -21,4 +27,4 @@ export function initDB() {
   `);
 }
 
-export default db;
+export default getDB;

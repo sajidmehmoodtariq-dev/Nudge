@@ -1,16 +1,118 @@
-// Stub — full implementation in Phase 1 Step 11
-// Depends on: @notifee/react-native (to be installed)
+import type {TimestampTrigger} from '@notifee/react-native';
+import notifee, {TriggerType, AndroidImportance} from '@notifee/react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-/**
- * Schedules a local notification via @notifee/react-native.
- * Returns the notification ID to store in SQLite.
- */
-export async function scheduleNotification(_label: string, _datetimeMs: number): Promise<string> {
-  // TODO: implement in Phase 1 Step 11
-  throw new Error('Not implemented');
+import * as reminderService from '../reminders/reminderService';
+
+export const PERMISSION_STATUS_KEY = '@nudge_notification_permission';
+
+export async function requestNotificationPermission() {
+  const existingStatus = await AsyncStorage.getItem(PERMISSION_STATUS_KEY);
+  if (existingStatus === 'granted') {
+    return true;
+  }
+
+  const settings = await notifee.requestPermission();
+  const granted = settings.authorizationStatus >= 1; // 1 or greater means authorized
+
+  await AsyncStorage.setItem(PERMISSION_STATUS_KEY, granted ? 'granted' : 'denied');
+  return granted;
 }
 
-export async function cancelNotification(_notificationId: string): Promise<void> {
-  // TODO: implement in Phase 1 Step 11
-  throw new Error('Not implemented');
+export async function createNotificationChannel() {
+  await notifee.createChannel({
+    id: 'nudge-reminders',
+    name: 'Nudge Reminders',
+    importance: AndroidImportance.HIGH,
+    sound: 'default',
+  });
+}
+
+export async function scheduleNotification({
+  id,
+  title,
+  datetime,
+}: {
+  id: string;
+  title: string;
+  datetime: Date;
+}): Promise<string> {
+  await requestNotificationPermission();
+  await createNotificationChannel();
+
+  const formattedTime = datetime.toLocaleString('en-US', {
+    weekday: 'short',
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+  });
+
+  // Custom "Today/Tomorrow" prefix logic
+  const now = new Date();
+  const isToday =
+    datetime.getDate() === now.getDate() &&
+    datetime.getMonth() === now.getMonth() &&
+    datetime.getFullYear() === now.getFullYear();
+
+  const bodyText = isToday
+    ? `Today at ${formattedTime.split(',')[1] || formattedTime}`
+    : formattedTime;
+
+  const trigger: TimestampTrigger = {
+    type: TriggerType.TIMESTAMP,
+    timestamp: datetime.getTime(),
+  };
+
+  const notificationId = id; // use the reminder ID as the notification ID for simplicity
+
+  await notifee.createTriggerNotification(
+    {
+      id: notificationId,
+      title,
+      body: bodyText,
+      android: {
+        channelId: 'nudge-reminders',
+        importance: AndroidImportance.HIGH,
+        pressAction: {
+          id: 'default',
+        },
+      },
+    },
+    trigger,
+  );
+
+  return notificationId;
+}
+
+export async function cancelNotification(notificationId: string) {
+  try {
+    await notifee.cancelTriggerNotification(notificationId);
+  } catch (error) {
+    console.warn('Failed to cancel notification:', error);
+  }
+}
+
+export async function checkPastDueReminders() {
+  try {
+    const reminders = await reminderService.getAll();
+    const now = Date.now();
+    const pastDue = reminders.filter(r => r.datetime < now);
+
+    if (pastDue.length > 0) {
+      await createNotificationChannel();
+      await notifee.displayNotification({
+        title: 'Missed Reminders',
+        body: `You have ${pastDue.length} past-due reminders.`,
+        android: {
+          channelId: 'nudge-reminders',
+          importance: AndroidImportance.HIGH,
+          pressAction: {
+            id: 'default',
+          },
+        },
+      });
+    }
+  } catch (error) {
+    console.error('Error checking past due reminders:', error);
+  }
 }
