@@ -242,6 +242,20 @@ class BubbleService : Service() {
         }
     }
 
+    fun playSuccessAnimation() {
+        if (::bubbleIcon.isInitialized) {
+            Handler(Looper.getMainLooper()).post {
+                // Apply MINT color filter
+                bubbleIcon.setColorFilter(android.graphics.Color.parseColor("#10B981"))
+                
+                // Clear after 800ms
+                Handler(Looper.getMainLooper()).postDelayed({
+                    bubbleIcon.clearColorFilter()
+                }, 800)
+            }
+        }
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         instance = null

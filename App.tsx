@@ -13,6 +13,8 @@ import {HomeScreen, ConfirmScreen, SettingsScreen, PermissionScreen} from '@scre
 import {colors} from '@theme';
 
 import {BubbleService} from './src/bubble/BubbleService';
+import {parseReminder} from './src/parser';
+import type {ParseResult} from './src/parser/types';
 
 const Stack = createNativeStackNavigator();
 
@@ -20,6 +22,7 @@ function App(): React.JSX.Element {
   const [initialRoute, setInitialRoute] = useState<string | null>(null);
   const [isSheetVisible, setIsSheetVisible] = useState(false);
   const [launchedFromBubble, setLaunchedFromBubble] = useState(false);
+  const [parseResult, setParseResult] = useState<ParseResult | null>(null);
 
   useEffect(() => {
     async function checkFirstLaunch() {
@@ -39,6 +42,7 @@ function App(): React.JSX.Element {
 
     const listener = DeviceEventEmitter.addListener('onBubbleTap', () => {
       setLaunchedFromBubble(true);
+      setParseResult(null);
       setIsSheetVisible(true);
     });
 
@@ -53,10 +57,16 @@ function App(): React.JSX.Element {
 
   const handleCloseSheet = () => {
     setIsSheetVisible(false);
+    setTimeout(() => setParseResult(null), 300); // clear after animation
     if (launchedFromBubble) {
       setLaunchedFromBubble(false);
       BubbleService.moveToBackground();
     }
+  };
+
+  const handleParse = (text: string) => {
+    const result = parseReminder(text);
+    setParseResult(result);
   };
 
   return (
@@ -81,7 +91,14 @@ function App(): React.JSX.Element {
         </Stack.Navigator>
       )}
       <BottomSheet isVisible={isSheetVisible} onClose={handleCloseSheet}>
-        <InputPanel onSubmit={handleCloseSheet} />
+        {parseResult ? (
+          <ConfirmScreen
+            route={{params: {result: parseResult}}}
+            navigation={{goBack: handleCloseSheet}}
+          />
+        ) : (
+          <InputPanel onSubmit={handleParse} />
+        )}
       </BottomSheet>
     </NavigationContainer>
   );

@@ -181,19 +181,6 @@ const InputPanel: React.FC<InputPanelProps> = ({onSubmit}) => {
     }
   }, [activeTab, clipboardContent, inputText, onSubmit]);
 
-  // Debounced auto-parse
-  useEffect(() => {
-    const finalContent = activeTab === 'Paste' ? clipboardContent : inputText;
-    if (!finalContent.trim() || activeTab === 'Paste') {
-      return;
-    } // Don't auto-parse on Paste
-    const timeoutId = setTimeout(() => {
-      // Auto-parse after 600ms of inactivity
-      handleSubmit();
-    }, 600);
-    return () => clearTimeout(timeoutId);
-  }, [inputText, clipboardContent, activeTab, handleSubmit]);
-
   return (
     <View style={styles.container}>
       {/* Tab Row */}

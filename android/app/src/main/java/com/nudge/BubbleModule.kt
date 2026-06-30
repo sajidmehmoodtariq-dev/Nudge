@@ -66,6 +66,11 @@ class BubbleModule(reactContext: ReactApplicationContext) : ReactContextBaseJava
     }
 
     @ReactMethod
+    fun playSuccessAnimation() {
+        BubbleService.instance?.playSuccessAnimation()
+    }
+
+    @ReactMethod
     fun moveToBackground() {
         val activity = currentActivity
         activity?.moveTaskToBack(true)
