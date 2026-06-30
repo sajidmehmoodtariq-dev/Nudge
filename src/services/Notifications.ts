@@ -43,3 +43,11 @@ export async function scheduleReminderNotification(
     trigger,
   );
 }
+
+export async function cancelReminderNotification(reminderId: string) {
+  try {
+    await notifee.cancelTriggerNotification(reminderId);
+  } catch (error) {
+    console.warn('Failed to cancel notification:', error);
+  }
+}

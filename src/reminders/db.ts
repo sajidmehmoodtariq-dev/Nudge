@@ -1,20 +1,24 @@
-// Stub — full implementation in Phase 1 Step 4
-// Depends on: expo-sqlite (to be installed)
+import * as SQLite from 'expo-sqlite';
+
+// Open or create the database. The connection is a singleton.
+const db = SQLite.openDatabaseSync('nudge.db');
 
 /**
- * SQLite singleton connection.
- * Schema:
- *   CREATE TABLE IF NOT EXISTS reminders (
- *     id             TEXT PRIMARY KEY,
- *     label          TEXT NOT NULL,
- *     datetime       INTEGER NOT NULL,
- *     language       TEXT NOT NULL,
- *     originalText   TEXT NOT NULL,
- *     isCompleted    INTEGER DEFAULT 0,
- *     createdAt      INTEGER NOT NULL,
- *     notificationId TEXT
- *   );
+ * Initializes the database tables. Should be called on app launch.
+ * It uses IF NOT EXISTS so it's idempotent.
  */
+export function initDB() {
+  db.execSync(`
+    CREATE TABLE IF NOT EXISTS reminders (
+      id TEXT PRIMARY KEY,
+      label TEXT,
+      datetime INTEGER,
+      language TEXT,
+      originalText TEXT,
+      isCompleted INTEGER DEFAULT 0,
+      createdAt INTEGER
+    );
+  `);
+}
 
-// TODO: implement in Phase 1 Step 4 with expo-sqlite
-export {};
+export default db;
