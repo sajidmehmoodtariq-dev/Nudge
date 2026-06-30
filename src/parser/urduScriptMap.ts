@@ -1,10 +1,13 @@
 export const URDU_SCRIPT_MAP: Record<string, string> = {
   // Time references
   کل: 'tomorrow',
-  پرسوں: 'day after tomorrow',
+  پرسوں: 'in 2 days',
   آج: 'today',
   ابھی: 'now',
   اگلے: 'next',
+  اگلا: 'next',
+  پچھلا: 'last',
+  پچھلی: 'last',
   اس: 'this',
   // Periods
   صبح: 'morning',

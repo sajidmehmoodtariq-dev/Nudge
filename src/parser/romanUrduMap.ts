@@ -2,9 +2,12 @@ export const ROMAN_URDU_MAP: Record<string, string> = {
   // Time references
   aaj: 'today',
   kal: 'tomorrow',
-  parso: 'day after tomorrow',
+  parso: 'in 2 days',
   abhi: 'now',
   agli: 'next',
+  agla: 'next',
+  pichli: 'last',
+  pichla: 'last',
   is: 'this',
   // Periods
   subah: 'morning',
@@ -12,7 +15,8 @@ export const ROMAN_URDU_MAP: Record<string, string> = {
   sham: 'evening',
   raat: 'night',
   // Days
-  somwar: 'Monday',
+  pir: 'Monday',
+  peer: 'Monday',
   mangal: 'Tuesday',
   budh: 'Wednesday',
   jumeraat: 'Thursday',
