@@ -270,4 +270,10 @@ class BubbleService : Service() {
             windowManager.removeView(bubbleRoot)
         }
     }
+
+    override fun onTaskRemoved(rootIntent: Intent?) {
+        super.onTaskRemoved(rootIntent)
+        // Stop the service when the user swipes away the app from the recents list
+        stopSelf()
+    }
 }

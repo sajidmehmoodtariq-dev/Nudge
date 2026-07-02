@@ -1,4 +1,4 @@
-import {ChevronLeft, Info, Github, Globe, Heart} from 'lucide-react-native';
+import {ChevronLeft, Info, Code, Globe, Heart} from 'lucide-react-native';
 import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, ScrollView, Linking} from 'react-native';
 
@@ -34,9 +34,9 @@ const AboutScreen: React.FC<any> = ({navigation}) => {
         <View style={styles.linksContainer}>
           <TouchableOpacity
             style={styles.linkItem}
-            onPress={() => Linking.openURL('https://github.com')}>
+            onPress={() => Linking.openURL('https://github.com/sajidmehmoodtariq-dev/Nudge')}>
             <View style={styles.linkIconWrapper}>
-              <Github color={colors.textMain} size={22} />
+              <Code color={colors.textMain} size={22} />
             </View>
             <Text style={styles.linkText}>View Source on GitHub</Text>
           </TouchableOpacity>
@@ -45,7 +45,7 @@ const AboutScreen: React.FC<any> = ({navigation}) => {
 
           <TouchableOpacity
             style={styles.linkItem}
-            onPress={() => Linking.openURL('https://example.com')}>
+            onPress={() => Linking.openURL('https://www.sajidmehmoodtariq.me')}>
             <View style={styles.linkIconWrapper}>
               <Globe color={colors.textMain} size={22} />
             </View>

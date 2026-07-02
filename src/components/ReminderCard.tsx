@@ -1,7 +1,7 @@
 import {Trash2, CheckCircle2, Circle} from 'lucide-react-native';
 import React, {useRef} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Animated} from 'react-native';
-import {Swipeable} from 'react-native-gesture-handler';
+import {View, Text, StyleSheet, Animated} from 'react-native';
+import {Swipeable, TouchableOpacity} from 'react-native-gesture-handler';
 import Reanimated, {useSharedValue, useAnimatedStyle, withSpring} from 'react-native-reanimated';
 
 import {colors, spacing, textStyles} from '@theme';

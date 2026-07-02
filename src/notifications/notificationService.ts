@@ -46,6 +46,16 @@ export async function scheduleNotification({
   await requestNotificationPermission();
   await createNotificationChannel();
 
+  const androidSettings = await notifee.getNotificationSettings();
+  // 1 is ENABLED, -1 is NOT_SUPPORTED (i.e. Android < 12)
+  if (androidSettings.alarm === 0 || androidSettings.alarm === false) {
+    try {
+      await notifee.openAlarmPermissionSettings();
+    } catch (e) {
+      console.warn('Failed to open alarm settings', e);
+    }
+  }
+
   const formattedTime = datetime.toLocaleString('en-US', {
     weekday: 'short',
     hour: 'numeric',
@@ -64,9 +74,14 @@ export async function scheduleNotification({
     ? `Today at ${formattedTime.split(',')[1] || formattedTime}`
     : formattedTime;
 
+  let triggerTime = datetime.getTime();
+  if (triggerTime <= Date.now()) {
+    triggerTime = Date.now() + 2000; // Ensure it's slightly in the future
+  }
+
   const trigger: TimestampTrigger = {
     type: TriggerType.TIMESTAMP,
-    timestamp: datetime.getTime(),
+    timestamp: triggerTime,
   };
 
   const notificationId = id; // use the reminder ID as the notification ID for simplicity

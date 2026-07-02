@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Clock, RefreshCw, Volume2, Info, ChevronRight} from 'lucide-react-native';
+import {Clock, RefreshCw, Volume2, Info, ChevronRight, EyeOff} from 'lucide-react-native';
 import React, {useState, useEffect} from 'react';
 import {
   View,
@@ -51,6 +51,13 @@ const SettingsScreen: React.FC<any> = ({navigation}) => {
     }
   };
 
+  const handleHideBubble = () => {
+    if (NativeModules.Bubble) {
+      NativeModules.Bubble.hideBubble();
+      console.log('Called hideBubble from native modules');
+    }
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
@@ -95,9 +102,7 @@ const SettingsScreen: React.FC<any> = ({navigation}) => {
 
         <Text style={styles.sectionTitle}>Bubble Overlay</Text>
         <View style={styles.cardGroup}>
-          <TouchableOpacity
-            style={[styles.settingItem, styles.settingItemNoBorder]}
-            onPress={handleResetBubble}>
+          <TouchableOpacity style={styles.settingItem} onPress={handleResetBubble}>
             <View style={styles.settingLeft}>
               <View style={[styles.iconWrapper, {backgroundColor: colors.warning + '20'}]}>
                 <RefreshCw color={colors.warning} size={22} />
@@ -105,6 +110,24 @@ const SettingsScreen: React.FC<any> = ({navigation}) => {
               <View style={styles.settingTextContainer}>
                 <Text style={styles.settingLabel}>Reset Bubble Position</Text>
                 <Text style={styles.settingDescription}>Move bubble back to screen center</Text>
+              </View>
+            </View>
+          </TouchableOpacity>
+
+          <View style={styles.divider} />
+
+          <TouchableOpacity
+            style={[styles.settingItem, styles.settingItemNoBorder]}
+            onPress={handleHideBubble}>
+            <View style={styles.settingLeft}>
+              <View style={[styles.iconWrapper, {backgroundColor: colors.danger + '20'}]}>
+                <EyeOff color={colors.danger} size={22} />
+              </View>
+              <View style={styles.settingTextContainer}>
+                <Text style={styles.settingLabel}>Hide Bubble Overlay</Text>
+                <Text style={styles.settingDescription}>
+                  Temporarily remove it until next launch
+                </Text>
               </View>
             </View>
           </TouchableOpacity>
