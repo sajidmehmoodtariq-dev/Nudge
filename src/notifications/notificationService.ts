@@ -1,5 +1,10 @@
 import type {TimestampTrigger} from '@notifee/react-native';
-import notifee, {TriggerType, AndroidImportance} from '@notifee/react-native';
+import notifee, {
+  TriggerType,
+  AndroidImportance,
+  AndroidCategory,
+  AndroidVisibility,
+} from '@notifee/react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import * as reminderService from '../reminders/reminderService';
@@ -25,6 +30,7 @@ export async function createNotificationChannel() {
     name: 'Nudge Reminders',
     importance: AndroidImportance.HIGH,
     sound: 'default',
+    vibration: true,
   });
 }
 
@@ -70,12 +76,21 @@ export async function scheduleNotification({
       id: notificationId,
       title,
       body: bodyText,
+      data: {
+        reminderId: id,
+        isAlarm: 'true',
+      },
       android: {
         channelId: 'nudge-reminders',
         importance: AndroidImportance.HIGH,
         pressAction: {
           id: 'default',
         },
+        fullScreenAction: {
+          id: 'default',
+        },
+        category: AndroidCategory.ALARM,
+        visibility: AndroidVisibility.PUBLIC,
       },
     },
     trigger,

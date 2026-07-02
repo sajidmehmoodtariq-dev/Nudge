@@ -3,6 +3,8 @@ import {CheckCircle, AlertTriangle} from 'lucide-react-native';
 import React, {useState, useCallback} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, NativeModules} from 'react-native';
 
+import {colors, spacing, textStyles} from '@theme';
+
 import {scheduleNotification} from '../notifications/notificationService';
 import type {ParseResult} from '../parser/types';
 import * as reminderService from '../reminders/reminderService';
@@ -99,9 +101,9 @@ export default function ConfirmScreen({route, navigation}: ConfirmScreenProps) {
     <View style={styles.container}>
       <View style={styles.iconContainer}>
         {result.confidence === 'high' ? (
-          <CheckCircle color="#10B981" size={48} strokeWidth={2.5} /> // MINT
+          <CheckCircle color={colors.accent} size={48} strokeWidth={2.5} />
         ) : (
-          <AlertTriangle color="#F59E0B" size={48} strokeWidth={2.5} /> // AMBER
+          <AlertTriangle color={colors.warning} size={48} strokeWidth={2.5} />
         )}
       </View>
 
@@ -161,59 +163,62 @@ export default function ConfirmScreen({route, navigation}: ConfirmScreenProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 24,
-    backgroundColor: '#ffffff',
+    padding: spacing.xl,
+    backgroundColor: 'transparent',
     justifyContent: 'center',
   },
   iconContainer: {
     alignItems: 'center',
-    marginBottom: 24,
+    marginBottom: spacing.xl,
   },
   label: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#1F2937',
+    ...textStyles.h2,
+    color: colors.textMain,
     textAlign: 'center',
-    marginBottom: 8,
+    marginBottom: spacing.xs,
   },
   datetime: {
-    fontSize: 18,
-    color: '#4B5563',
+    ...textStyles.bodyLarge,
+    color: colors.primary,
+    fontWeight: '600',
     textAlign: 'center',
-    marginBottom: 16,
+    marginBottom: spacing.md,
   },
   originalText: {
-    fontSize: 14,
-    color: '#9CA3AF',
+    ...textStyles.caption,
+    color: colors.textSub,
     textAlign: 'center',
     fontStyle: 'italic',
-    marginBottom: 24,
+    marginBottom: spacing.xl,
   },
   editButton: {
     alignSelf: 'center',
-    paddingVertical: 8,
-    paddingHorizontal: 16,
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.lg,
     borderRadius: 20,
-    backgroundColor: '#F3F4F6',
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
     marginBottom: 48,
   },
   editButtonText: {
-    color: '#4F46E5',
-    fontWeight: '600',
+    ...textStyles.label,
+    color: colors.textMain,
   },
   footer: {
     marginTop: 'auto',
   },
   cancelButton: {
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: spacing.md,
+    paddingVertical: spacing.sm,
   },
   cancelText: {
-    color: '#6B7280',
-    fontSize: 14,
+    ...textStyles.label,
+    color: colors.textSub,
   },
   saveButton: {
-    backgroundColor: '#4F46E5', // Indigo
+    backgroundColor: colors.primary,
     height: 52,
     borderRadius: 26,
     justifyContent: 'center',
@@ -221,8 +226,8 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   saveButtonText: {
+    ...textStyles.label,
     color: '#ffffff',
-    fontSize: 16,
     fontWeight: 'bold',
   },
 });

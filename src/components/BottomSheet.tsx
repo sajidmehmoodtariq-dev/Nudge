@@ -8,6 +8,8 @@ import Animated, {
   runOnJS,
 } from 'react-native-reanimated';
 
+import {colors} from '@theme';
+
 const {height: SCREEN_HEIGHT} = Dimensions.get('window');
 
 interface BottomSheetProps {
@@ -114,18 +116,18 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   sheet: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.surface,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     width: '100%',
     maxHeight: SCREEN_HEIGHT * 0.6,
     position: 'absolute',
     bottom: 0,
-    elevation: 20, // For Android shadow
-    shadowColor: '#000', // For iOS shadow
+    elevation: 20,
+    shadowColor: '#000',
     shadowOffset: {width: 0, height: -2},
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
   },
   handleContainer: {
     alignItems: 'center',
@@ -134,7 +136,7 @@ const styles = StyleSheet.create({
   handle: {
     width: 36,
     height: 4,
-    backgroundColor: '#D1D5DB',
+    backgroundColor: colors.border,
     borderRadius: 2,
   },
   contentContainer: {

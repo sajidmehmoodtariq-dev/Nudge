@@ -8,6 +8,7 @@ import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
+import android.util.Log
 
 class BubbleModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
 
@@ -44,13 +45,22 @@ class BubbleModule(reactContext: ReactApplicationContext) : ReactContextBaseJava
 
     @ReactMethod
     fun showBubble() {
+        Log.d("BubbleModule", "showBubble called")
         if (Settings.canDrawOverlays(reactApplicationContext)) {
-            val serviceIntent = Intent(reactApplicationContext, BubbleService::class.java)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                reactApplicationContext.startForegroundService(serviceIntent)
-            } else {
-                reactApplicationContext.startService(serviceIntent)
+            Log.d("BubbleModule", "Has overlay permission, starting service")
+            try {
+                val serviceIntent = Intent(reactApplicationContext, BubbleService::class.java)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    reactApplicationContext.startForegroundService(serviceIntent)
+                } else {
+                    reactApplicationContext.startService(serviceIntent)
+                }
+                Log.d("BubbleModule", "Service start intent fired")
+            } catch (e: Exception) {
+                Log.e("BubbleModule", "Error starting service", e)
             }
+        } else {
+            Log.d("BubbleModule", "No overlay permission")
         }
     }
 

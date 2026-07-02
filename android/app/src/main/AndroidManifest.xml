@@ -5,7 +5,11 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <!-- Floating overlay bubble (requires user grant at runtime) -->
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
     <!-- Bubble foreground service -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />

@@ -15,6 +15,7 @@ import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.util.Log
 import android.util.TypedValue
 import android.view.*
 import android.view.animation.OvershootInterpolator
@@ -44,12 +45,18 @@ class BubbleService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        instance = this
-        prefs = getSharedPreferences("BubblePrefs", Context.MODE_PRIVATE)
-        windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
+        Log.d("BubbleService", "onCreate started")
+        try {
+            instance = this
+            prefs = getSharedPreferences("BubblePrefs", Context.MODE_PRIVATE)
+            windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
 
-        startForegroundServiceNotification()
-        setupBubbleView()
+            startForegroundServiceNotification()
+            setupBubbleView()
+            Log.d("BubbleService", "onCreate finished successfully")
+        } catch (e: Exception) {
+            Log.e("BubbleService", "Error in onCreate", e)
+        }
     }
 
     private fun startForegroundServiceNotification() {

@@ -1,16 +1,16 @@
 export const colors = {
-  primary: '#5B5FEF', // Indigo — bubble, buttons, active states
-  primaryDark: '#3D40C4',
-  primaryLight: '#E8E9FD', // light indigo — backgrounds, badges
-  accent: '#00C896', // Mint green — success, done state, bullets
-  warning: '#F59E0B', // Amber — low confidence parse, caution
-  danger: '#F43F5E', // Rose — delete, error
-  background: '#F7F8FF', // Off-white app background
-  surface: '#FFFFFF', // Card / panel surface
-  textMain: '#1A1B2E', // Near-black main text
-  textSub: '#6B7280', // Cool gray secondary text
-  textLight: '#9CA3AF', // Placeholder, captions
-  border: '#E5E7EB', // Card borders, dividers
+  primary: '#6366F1', // Vibrant Indigo
+  primaryDark: '#4338CA',
+  primaryLight: '#818CF8', // Glowing Indigo
+  accent: '#10B981', // Neon Mint
+  warning: '#F59E0B', // Amber
+  danger: '#EF4444', // Rose
+  background: '#0B0C10', // Deep OLED Black
+  surface: '#1F2833', // Elevated Charcoal
+  textMain: '#F9FAFB', // Near-white main text
+  textSub: '#9CA3AF', // Cool gray secondary text
+  textLight: '#6B7280', // Placeholder, captions
+  border: '#2A2C30', // Subtle outline stroke
 } as const;
 
 export type ColorKey = keyof typeof colors;
